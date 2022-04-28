@@ -1,4 +1,3 @@
-# Casus-Spotify
 
 ## What is this project
 
