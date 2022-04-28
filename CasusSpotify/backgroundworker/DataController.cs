@@ -122,12 +122,12 @@ namespace backgroundworker
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = @"SELECT PlaylistName FROM playlists WHERE UserIDBound = $userid";
+                command.CommandText = @"SELECT PlaylistName,PlaylistID FROM playlists WHERE UserIDBound = $userid";
                 command.Parameters.AddWithValue("$userid", userid);
                 List<Afspeellijst> afspeellijsten = new List<Afspeellijst>();
                 using (var reader = command.ExecuteReader())
                     while (reader.Read())
-                        afspeellijsten.Add(new Afspeellijst(reader.GetString(0)));
+                        afspeellijsten.Add(new Afspeellijst(reader.GetString(0),reader.GetInt32(1)));
                 return afspeellijsten;
             }
         }

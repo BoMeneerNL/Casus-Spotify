@@ -5,12 +5,19 @@ namespace backgroundworker
     public class Afspeellijst : IPlaylist, ISongCollection
     {
         List<Song> Songs { get; set; } = new List<Song>();
-        public string Name { get; set; }
+        public string Name { get;}
+        public int PlaylistID { get;}
         public Afspeellijst(string name) => Name = name;
+
         public Afspeellijst(List<Song> songs, string name)
         {
             Name = name;
             Songs = songs;
+        }
+        public Afspeellijst(string name,int playlistID)
+        {
+            Name = name;
+            PlaylistID = playlistID;
         }
         public Song[] GetAllSongs() => Songs.ToArray();
         public string[] GetAllSongNames()

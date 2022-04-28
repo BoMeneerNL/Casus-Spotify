@@ -1,8 +1,12 @@
-﻿using System;
+﻿using backgroundworker;
+using System;
+using System.Collections.Generic;
+
 namespace clh
 {
     public class Program
     {
+        public static List<Afspeellijst> playlists = DataController.GetAllAfspeellijsten(1);
         public static int calculate_duration(string time)
         {
 
@@ -19,7 +23,7 @@ namespace clh
             string passthrou = "";
             while (true)
             {
-                if(passthrou != "")
+                if (passthrou != "")
                 {
                     Console.WriteLine(passthrou);
                     passthrou = "";
@@ -31,7 +35,8 @@ namespace clh
                 Console.WriteLine("2) See, add or remove my friend(s)");
                 Console.WriteLine("3) See and play playlist(s) of my friend(s)");
                 Console.WriteLine("4) See all and it songs albums");
-                Console.WriteLine("5) Exit CasusSpotify");
+                Console.WriteLine("5) Select and play a song");
+                Console.WriteLine("6) Exit CasusSpotify");
                 Console.Write("> ");
                 ConsoleKeyInfo input = Console.ReadKey();
                 Console.WriteLine();
@@ -41,7 +46,7 @@ namespace clh
                         while (true)
                         {
                             passthrou = "";
-                            if(passthrou != "")
+                            if (passthrou != "")
                                 Console.WriteLine(passthrou);
                             Console.WriteLine("What do you want to do with your playlist(s)?");
                             Console.WriteLine("1) See a specific playlist");
@@ -53,31 +58,109 @@ namespace clh
                             Console.WriteLine("7) Go back");
                             Console.Write("> ");
                             input = Console.ReadKey();
-                            
+                            Console.WriteLine();
                             switch (input.Key)
                             {
                                 case ConsoleKey.D1:
-                                    if (backgroundworker.DataController.GetCount("playlists_1") == 0) {
+                                    if (DataController.GetCount("playlists_1") == 0)
+                                    {
                                         Console.WriteLine("You currently don't have a playlist, do you want to create one? (y/n)");
-                                        while(input.Key is not ConsoleKey.Y and not ConsoleKey.N) {
+                                        while (input.Key is not ConsoleKey.Y and not ConsoleKey.N)
+                                        {
                                             Console.Write("> ");
                                             input = Console.ReadKey();
+                                            Console.WriteLine();
                                         }
                                         if (input.Key == ConsoleKey.N) break;
                                         Console.WriteLine("How do you want to name the playlist?");
                                         Console.Write("> ");
                                         string NameNewPlaylist = Console.ReadLine();
-                                        backgroundworker.DataController.CreatePlaylist(NameNewPlaylist, 1);
+                                        DataController.CreatePlaylist(NameNewPlaylist, 1);
                                         break;
+                                    }
+                                    else
+                                    {
+                                        int counter = 0;
+                                        Console.Clear();
+                                        Console.WriteLine("What playlist do you want to edit?");
+                                        for (int i = 0; i < playlists.Count; i++)
+                                        {
+                                            Console.WriteLine($"{i + 1}) {playlists[i].Name}");
+                                            counter++;
+                                        }
+                                            
+                                        Console.Write("> ");
+                                        string inp = Console.ReadLine();
+                                        if (int.TryParse(inp,out _))
+                                        {
+                                            if(int.Parse(inp) <= counter && int.Parse(inp) > 0)
+                                            {
+                                                Afspeellijst hi= playlists[int.Parse(inp) - 1];
+                                                Console.Clear();
+                                                Console.WriteLine($"What do you want to do with the playlist: {hi.Name}?");
+                                                Console.WriteLine("1) Add song(s)");
+                                                Console.WriteLine("2) Remove song(s)");
+                                                Console.WriteLine("3) Rename this playlist");
+                                                Console.WriteLine("4) Delete this playlist");
+                                                Console.Write("> ");
+                                                input = Console.ReadKey();
+                                                Console.WriteLine();
+                                                switch (input.Key)
+                                                {
+                                                    case ConsoleKey.D1:
+
+                                                        break;
+                                                    case ConsoleKey.D2:
+
+                                                        break;
+                                                    case ConsoleKey.D3:
+                                                        
+                                                        break;
+                                                    case ConsoleKey.D4:
+                                                        Console.WriteLine($"Are you sure you want to delete {hi.Name}? (y/n)");
+                                                        Console.Write("> ");
+                                                        input = Console.ReadKey();
+                                                        Console.WriteLine();
+                                                        if(input.Key == ConsoleKey.Y)
+                                                        {
+                                                            Console.WriteLine($"The playlist {hi.Name} will be deleted...");
+                                                            DataController.DeletePlaylist(hi.PlaylistID);
+                                                            Console.WriteLine($"The playlist {hi.Name} is deleted");
+                                                        }
+                                                        break;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Console.Clear();
+                                                Console.ForegroundColor = ConsoleColor.Red;
+                                                Console.WriteLine("The number given could not be found linked to a playlist");
+                                                Console.ResetColor();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine("FATAL ERROR: String unconvertable to INT");
+                                            Environment.Exit(0);
+                                        }
+                                        playlists = DataController.GetAllAfspeellijsten(1);
                                     }
                                     break;
                                 case ConsoleKey.D2:
                                     break;
                                 case ConsoleKey.D3:
-                                    
+
                                     break;
                                 case ConsoleKey.D4:
 
+                                    break;
+                                case ConsoleKey.D5:
+                                    Console.WriteLine("How do you want to call your new playlist");
+                                    Console.Write("> ");
+                                    DataController.CreatePlaylist(Console.ReadLine(), 1);
+                                    Console.Clear();
+                                    Console.WriteLine("The new playlist is created");
                                     break;
 
                             }
@@ -87,7 +170,7 @@ namespace clh
                                 input = new();
                                 break;
                             }
-                                
+
                         }
                         break;
                     case ConsoleKey.D2:
@@ -100,10 +183,10 @@ namespace clh
 
                         break;
                     case ConsoleKey.D5:
-                        
+
                         break;
                 }
-                if(input.Key == ConsoleKey.D5)
+                if (input.Key == ConsoleKey.D5)
                     break;
             }
             Console.Clear();
@@ -131,7 +214,7 @@ namespace clh
                         Console.Write("Please enter your password: ");
                         string password = Console.ReadLine();
 
-                        backgroundworker.DataController.credentials_check(username, password);
+                        DataController.credentials_check(username, password);
                     }
 
                 }
@@ -154,7 +237,7 @@ namespace clh
                             }
                             Console.Write("Please enter your new password: ");
                             string password = Console.ReadLine();
-                            if (backgroundworker.DataController.CreateAccount(username, password))
+                            if (DataController.CreateAccount(username, password))
                             {
                                 return;
                             }
