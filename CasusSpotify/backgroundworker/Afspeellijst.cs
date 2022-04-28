@@ -2,17 +2,17 @@
 
 namespace backgroundworker
 {
-    public class Afspeellijst : IPlaylist,ISongCollection
+    public class Afspeellijst : IPlaylist, ISongCollection
     {
         List<Song> Songs { get; set; } = new List<Song>();
-        public Afspeellijst()
+        public string Name { get; set; }
+        public Afspeellijst(string name) => Name = name;
+        public Afspeellijst(List<Song> songs, string name)
         {
-
+            Name = name;
+            Songs = songs;
         }
-        public Song[] GetAllSongs()
-        {
-            return Songs.ToArray();
-        }
+        public Song[] GetAllSongs() => Songs.ToArray();
         public string[] GetAllSongNames()
         {
             string[] songnames = new string[Songs.Count];
