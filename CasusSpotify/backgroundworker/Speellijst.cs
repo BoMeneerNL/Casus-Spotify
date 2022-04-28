@@ -2,13 +2,13 @@
 
 namespace backgroundworker
 {
-    public class Speellijst : IPlaylist,ISongCollection
+    public class Speellijst : IPlaylist, ISongCollection
     {
         List<Song> Songs { get; set; } = new List<Song>();
         public Speellijst()
         {
-            
-        }        
+
+        }
         public Song[] GetAllSongs()
         {
             return Songs.ToArray();

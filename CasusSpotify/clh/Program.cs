@@ -1,12 +1,14 @@
 ﻿using backgroundworker;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace clh
 {
     public class Program
     {
         public static List<Afspeellijst> playlists = DataController.GetAllAfspeellijsten(1);
+
         public static int calculate_duration(string time)
         {
 
@@ -18,25 +20,27 @@ namespace clh
         public static void Main()
         {
             Console.Title = "Casus Spotify";
-            //Console.WriteLine(calculate_duration("2:54"));
+            //Console.WriteLine(calculate_duration("1:46"));
             //return;
             string passthrou = "";
             while (true)
             {
+                List<Song> Waitinglist = new();
+                int CurrentTimeLeft;
                 if (passthrou != "")
                 {
                     Console.WriteLine(passthrou);
                     passthrou = "";
                 }
-                Console.Clear();
                 Console.WriteLine("Welcome to CasusSpotify");
                 Console.WriteLine("What action do you want to do?");
                 Console.WriteLine("1) See, play or edit my playlist(s)");
                 Console.WriteLine("2) See, add or remove my friend(s)");
                 Console.WriteLine("3) See and play playlist(s) of my friend(s)");
-                Console.WriteLine("4) See all and it songs albums");
-                Console.WriteLine("5) Select and play a song");
-                Console.WriteLine("6) Exit CasusSpotify");
+                Console.WriteLine("4) See all songs and albums");
+                Console.WriteLine("5) Add song(s) to waiting list");
+                Console.WriteLine("6) Play waiting list");
+                Console.WriteLine("7) Exit CasusSpotify");
                 Console.Write("> ");
                 ConsoleKeyInfo input = Console.ReadKey();
                 Console.WriteLine();
@@ -88,14 +92,14 @@ namespace clh
                                             Console.WriteLine($"{i + 1}) {playlists[i].Name}");
                                             counter++;
                                         }
-                                            
+
                                         Console.Write("> ");
                                         string inp = Console.ReadLine();
-                                        if (int.TryParse(inp,out _))
+                                        if (int.TryParse(inp, out _))
                                         {
-                                            if(int.Parse(inp) <= counter && int.Parse(inp) > 0)
+                                            if (int.Parse(inp) <= counter && int.Parse(inp) > 0)
                                             {
-                                                Afspeellijst hi= playlists[int.Parse(inp) - 1];
+                                                Afspeellijst hi = playlists[int.Parse(inp) - 1];
                                                 Console.Clear();
                                                 Console.WriteLine($"What do you want to do with the playlist: {hi.Name}?");
                                                 Console.WriteLine("1) Add song(s)");
@@ -114,14 +118,14 @@ namespace clh
 
                                                         break;
                                                     case ConsoleKey.D3:
-                                                        
+
                                                         break;
                                                     case ConsoleKey.D4:
                                                         Console.WriteLine($"Are you sure you want to delete {hi.Name}? (y/n)");
                                                         Console.Write("> ");
                                                         input = Console.ReadKey();
                                                         Console.WriteLine();
-                                                        if(input.Key == ConsoleKey.Y)
+                                                        if (input.Key == ConsoleKey.Y)
                                                         {
                                                             Console.WriteLine($"The playlist {hi.Name} will be deleted...");
                                                             DataController.DeletePlaylist(hi.PlaylistID);
@@ -183,14 +187,59 @@ namespace clh
 
                         break;
                     case ConsoleKey.D5:
+                        Console.WriteLine("What song do you want to add to the waitinglist?");
+                        List<Song> csongs = DataController.GetAllSongs();
+                        for (int i = 0; i < csongs.Count; i++)
+                        {
+                            Console.WriteLine($"{i + 1}) {csongs[i]}");
+                        }
+                        break;
+                    case ConsoleKey.D6:
+                        if (Waitinglist.Count > 0)
+                        {
+                            foreach (Song song in Waitinglist)
+                            {
+                                int duration = song.Duration;
+                                CurrentTimeLeft = duration;
+                                for (int i = duration; i > 0; i--)
+                                {
+                                    for (int j = 100; j > 0; j--)
+                                    {
+                                        if (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
+                                        {
+                                            Console.WriteLine($"{i},{j}");
+                                            Thread.Sleep(10);
+                                        }
+                                        else
+                                            Pause();
 
+                                    }
+                                    CurrentTimeLeft--;
+                                }
+
+                            }
+                            Console.Clear();
+                            Console.WriteLine("Waitlist is finished");
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("The waitlist has no songs, try adding some.");
+                        }
                         break;
                 }
-                if (input.Key == ConsoleKey.D5)
+                if (input.Key == ConsoleKey.D7)
                     break;
             }
             Console.Clear();
             Console.WriteLine("Thanks for using CasusSpotify");
+        }
+        public static void Pause()
+        {
+            while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
+            {
+
+            }
         }
         public static void Login()
         {

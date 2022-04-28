@@ -6,8 +6,8 @@
         public string Name { get; set; }
         private string Artiest { get; set; }
         public int Duration { get; set; }
-
-        public Song(string name = "", string artiest = "",int duration = 0)
+        public string Artists { get; set; }
+        public Song(string name = "", string artiest = "", int duration = 0)
         {
             Name = name;
             Artiest = artiest;

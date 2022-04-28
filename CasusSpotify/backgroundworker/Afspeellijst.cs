@@ -5,8 +5,8 @@ namespace backgroundworker
     public class Afspeellijst : IPlaylist, ISongCollection
     {
         List<Song> Songs { get; set; } = new List<Song>();
-        public string Name { get;}
-        public int PlaylistID { get;}
+        public string Name { get; }
+        public int PlaylistID { get; }
         public Afspeellijst(string name) => Name = name;
 
         public Afspeellijst(List<Song> songs, string name)
@@ -14,7 +14,7 @@ namespace backgroundworker
             Name = name;
             Songs = songs;
         }
-        public Afspeellijst(string name,int playlistID)
+        public Afspeellijst(string name, int playlistID)
         {
             Name = name;
             PlaylistID = playlistID;

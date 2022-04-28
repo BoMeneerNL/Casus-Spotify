@@ -127,8 +127,18 @@ namespace backgroundworker
                 List<Afspeellijst> afspeellijsten = new List<Afspeellijst>();
                 using (var reader = command.ExecuteReader())
                     while (reader.Read())
-                        afspeellijsten.Add(new Afspeellijst(reader.GetString(0),reader.GetInt32(1)));
+                        afspeellijsten.Add(new Afspeellijst(reader.GetString(0), reader.GetInt32(1)));
                 return afspeellijsten;
+            }
+        }
+
+        public static List<Song> GetAllSongs()
+        {
+            using (var connection = new SqliteConnection(@$"Data Source={Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\niet_spotify.databasefile"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"SELECT SongID,SongName,Artist,Album,Duration FROM songs";
             }
         }
     }
