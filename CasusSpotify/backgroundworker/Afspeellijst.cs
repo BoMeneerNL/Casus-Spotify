@@ -4,7 +4,7 @@ namespace backgroundworker
 {
     public class Afspeellijst : IPlaylist, ISongCollection
     {
-        List<Song> Songs { get; set; } = new List<Song>();
+        public List<Song> Songs { get; set; } = new List<Song>();
         public string Name { get; }
         public int PlaylistID { get; }
         public Afspeellijst(string name) => Name = name;

@@ -145,12 +145,26 @@ namespace backgroundworker
                         Album.Add(reader.GetInt32(0), reader.GetString(1));
                 command.Dispose();
                 command = connection.CreateCommand();
-                command.CommandText = @"SELECT SongName,Artiest,Duration,AlbumID FROM Songs";
+                command.CommandText = @"SELECT SongID,SongName,Artiest,Duration,AlbumID FROM Songs";
                 List<Song> songs = new List<Song>();
                 using (var reader = command.ExecuteReader())
                     while (reader.Read())
-                        songs.Add(new Song(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), Album[reader.GetInt32(3)]));
+                        songs.Add(new Song(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), Album[reader.GetInt32(4)]));
                 return songs;
+            }
+        }
+
+        public static void RenamePlaylist(string NewName, int PlaylistID)
+        {
+            if (NewName == "") NewName = "_Unnamed Playlist_";
+            using (var connection = new SqliteConnection(@$"Data Source={Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\niet_spotify.databasefile"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"UPDATE playlists SET PlaylistName = $playlistname WHERE PlaylistID = $playlistid";
+                command.Parameters.AddWithValue("$playlistname", NewName);
+                command.Parameters.AddWithValue("$playlistid", PlaylistID);
+                command.ExecuteNonQuery();
             }
         }
     }

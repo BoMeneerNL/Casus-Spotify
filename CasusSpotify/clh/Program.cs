@@ -50,9 +50,6 @@ namespace clh
                         Console.Clear();
                         while (true)
                         {
-                            passthrou = "";
-                            if (passthrou != "")
-                                Console.WriteLine(passthrou);
                             Console.WriteLine("What do you want to do with your playlist(s)?");
                             Console.WriteLine("1) See a specific playlist");
                             Console.WriteLine("2) See all songs in all playlists");
@@ -110,6 +107,8 @@ namespace clh
                                                     Console.WriteLine("2) Remove song(s)");
                                                     Console.WriteLine("3) Rename this playlist");
                                                     Console.WriteLine("4) Delete this playlist");
+                                                    Console.WriteLine("5) Add this playlist to the waiting list");
+                                                    Console.WriteLine("6) Go back");
                                                     Console.Write("> ");
                                                     input = Console.ReadKey();
                                                     Console.WriteLine();
@@ -119,10 +118,14 @@ namespace clh
 
                                                             break;
                                                         case ConsoleKey.D2:
-
+                                                            
                                                             break;
                                                         case ConsoleKey.D3:
-
+                                                            Console.WriteLine("To what name do you want to rename this playlist?");
+                                                            Console.Write("> ");
+                                                            DataController.RenamePlaylist(Console.ReadLine(), hi.PlaylistID);
+                                                            Console.Clear();
+                                                            Console.WriteLine("Playlist renamed");
                                                             break;
                                                         case ConsoleKey.D4:
                                                             Console.WriteLine($"Are you sure you want to delete {hi.Name}? (y/n)");
@@ -134,6 +137,16 @@ namespace clh
                                                                 Console.WriteLine($"The playlist {hi.Name} will be deleted...");
                                                                 DataController.DeletePlaylist(hi.PlaylistID);
                                                                 Console.WriteLine($"The playlist {hi.Name} is deleted");
+                                                            }
+                                                            break;
+                                                        case ConsoleKey.D5:
+                                                            List<Song> songs = hi.Songs;
+                                                            foreach(Song song in songs)
+                                                            {
+                                                                int cntr = 0;
+                                                                Waitinglist.ForEach((s) => { if (s.SongID == song.SongID) cntr++; });
+                                                                if(cntr == 0)
+                                                                    Waitinglist.Add(song);
                                                             }
                                                             break;
                                                     }
