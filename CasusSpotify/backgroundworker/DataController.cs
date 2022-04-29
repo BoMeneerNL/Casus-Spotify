@@ -134,11 +134,23 @@ namespace backgroundworker
 
         public static List<Song> GetAllSongs()
         {
+            Dictionary<int, string> Album = new();
             using (var connection = new SqliteConnection(@$"Data Source={Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\niet_spotify.databasefile"))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = @"SELECT SongID,SongName,Artist,Album,Duration FROM songs";
+                command.CommandText = @"SELECT AlbumID,Albumnaam FROM Albums";
+                using (var reader = command.ExecuteReader())
+                    while (reader.Read())
+                        Album.Add(reader.GetInt32(0), reader.GetString(1));
+                command.Dispose();
+                command = connection.CreateCommand();
+                command.CommandText = @"SELECT SongName,Artiest,Duration,AlbumID FROM Songs";
+                List<Song> songs = new List<Song>();
+                using (var reader = command.ExecuteReader())
+                    while (reader.Read())
+                        songs.Add(new Song(reader.GetString(0),reader.GetString(1),reader.GetInt32(2),Album[reader.GetInt32(3)]));
+                return songs;
             }
         }
     }

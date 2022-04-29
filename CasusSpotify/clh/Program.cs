@@ -187,11 +187,22 @@ namespace clh
 
                         break;
                     case ConsoleKey.D5:
-                        Console.WriteLine("What song do you want to add to the waitinglist?");
+
                         List<Song> csongs = DataController.GetAllSongs();
                         for (int i = 0; i < csongs.Count; i++)
-                        {
                             Console.WriteLine($"{i + 1}) {csongs[i]}");
+
+                        Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                        Console.WriteLine("What song do you want to add to the waitinglist?");
+                        Console.Write("> ");
+                        string inpu = Console.ReadLine();
+                        if (int.TryParse(inpu,out _)) {
+                            int selector = int.Parse(inpu);
+
+                        }
+                        else
+                        {
+
                         }
                         break;
                     case ConsoleKey.D6:
