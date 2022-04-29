@@ -47,6 +47,7 @@ namespace clh
                 switch (input.Key)
                 {
                     case ConsoleKey.D1:
+                        Console.Clear();
                         while (true)
                         {
                             passthrou = "";
@@ -87,6 +88,7 @@ namespace clh
                                         int counter = 0;
                                         Console.Clear();
                                         Console.WriteLine("What playlist do you want to edit?");
+                                        Console.WriteLine("0) Return");
                                         for (int i = 0; i < playlists.Count; i++)
                                         {
                                             Console.WriteLine($"{i + 1}) {playlists[i].Name}");
@@ -97,48 +99,56 @@ namespace clh
                                         string inp = Console.ReadLine();
                                         if (int.TryParse(inp, out _))
                                         {
-                                            if (int.Parse(inp) <= counter && int.Parse(inp) > 0)
+                                            if (int.Parse(inp) <= counter && int.Parse(inp) >= 0)
                                             {
-                                                Afspeellijst hi = playlists[int.Parse(inp) - 1];
-                                                Console.Clear();
-                                                Console.WriteLine($"What do you want to do with the playlist: {hi.Name}?");
-                                                Console.WriteLine("1) Add song(s)");
-                                                Console.WriteLine("2) Remove song(s)");
-                                                Console.WriteLine("3) Rename this playlist");
-                                                Console.WriteLine("4) Delete this playlist");
-                                                Console.Write("> ");
-                                                input = Console.ReadKey();
-                                                Console.WriteLine();
-                                                switch (input.Key)
+                                                if (int.Parse(inp) > 0)
                                                 {
-                                                    case ConsoleKey.D1:
+                                                    Afspeellijst hi = playlists[int.Parse(inp) - 1];
+                                                    Console.Clear();
+                                                    Console.WriteLine($"What do you want to do with the playlist: {hi.Name}?");
+                                                    Console.WriteLine("1) Add song(s)");
+                                                    Console.WriteLine("2) Remove song(s)");
+                                                    Console.WriteLine("3) Rename this playlist");
+                                                    Console.WriteLine("4) Delete this playlist");
+                                                    Console.Write("> ");
+                                                    input = Console.ReadKey();
+                                                    Console.WriteLine();
+                                                    switch (input.Key)
+                                                    {
+                                                        case ConsoleKey.D1:
 
-                                                        break;
-                                                    case ConsoleKey.D2:
+                                                            break;
+                                                        case ConsoleKey.D2:
 
-                                                        break;
-                                                    case ConsoleKey.D3:
+                                                            break;
+                                                        case ConsoleKey.D3:
 
-                                                        break;
-                                                    case ConsoleKey.D4:
-                                                        Console.WriteLine($"Are you sure you want to delete {hi.Name}? (y/n)");
-                                                        Console.Write("> ");
-                                                        input = Console.ReadKey();
-                                                        Console.WriteLine();
-                                                        if (input.Key == ConsoleKey.Y)
-                                                        {
-                                                            Console.WriteLine($"The playlist {hi.Name} will be deleted...");
-                                                            DataController.DeletePlaylist(hi.PlaylistID);
-                                                            Console.WriteLine($"The playlist {hi.Name} is deleted");
-                                                        }
-                                                        break;
+                                                            break;
+                                                        case ConsoleKey.D4:
+                                                            Console.WriteLine($"Are you sure you want to delete {hi.Name}? (y/n)");
+                                                            Console.Write("> ");
+                                                            input = Console.ReadKey();
+                                                            Console.WriteLine();
+                                                            if (input.Key == ConsoleKey.Y)
+                                                            {
+                                                                Console.WriteLine($"The playlist {hi.Name} will be deleted...");
+                                                                DataController.DeletePlaylist(hi.PlaylistID);
+                                                                Console.WriteLine($"The playlist {hi.Name} is deleted");
+                                                            }
+                                                            break;
+                                                    }
                                                 }
+                                                else
+                                                {
+                                                    Console.Clear();
+                                                }
+
                                             }
                                             else
                                             {
                                                 Console.Clear();
                                                 Console.ForegroundColor = ConsoleColor.Red;
-                                                Console.WriteLine("The number given could not be found linked to a playlist");
+                                                Console.WriteLine("The number given could not be linked to a playlist");
                                                 Console.ResetColor();
                                             }
                                         }
@@ -165,6 +175,55 @@ namespace clh
                                     DataController.CreatePlaylist(Console.ReadLine(), 1);
                                     Console.Clear();
                                     Console.WriteLine("The new playlist is created");
+                                    break;
+                                case ConsoleKey.D6:
+                                    Console.Clear();
+                                    Console.WriteLine("What playlist do you want to delete?");
+                                    Console.WriteLine("0) Cancel the deletion of a playlist");
+                                    for (int i = 0; i < playlists.Count; i++)
+                                        Console.WriteLine($"{i + 1}) {playlists[i].Name}");
+                                    string inputt = Console.ReadLine();
+                                    if (int.TryParse(inputt, out _))
+                                    {
+                                        if (int.Parse(inputt) <= playlists.Count)
+                                        {
+                                            if (int.Parse(inputt) == 0)
+                                                Console.Clear();
+                                            else
+                                            {
+                                                DataController.DeletePlaylist(playlists[int.Parse(inputt) - 1].PlaylistID);
+                                                Console.WriteLine($"Are you sure you want to delete {playlists[int.Parse(inputt) - 1].Name}? (y/n)");
+                                                Console.Write("> ");
+                                                input = Console.ReadKey();
+                                                Console.WriteLine();
+                                                if (input.Key == ConsoleKey.Y)
+                                                {
+                                                    Console.WriteLine($"The playlist {playlists[int.Parse(inputt) - 1].Name} will be deleted...");
+                                                    DataController.DeletePlaylist(playlists[int.Parse(inputt) - 1].PlaylistID);
+                                                    Console.WriteLine($"The playlist {playlists[int.Parse(inputt) - 1].Name} is deleted");
+                                                }
+                                                else
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("The deletion of the playlist is canceled");
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine("Could not delete the playlist because the given number was not linked to a playlist");
+                                        }
+
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("FATAL ERROR: String unconvertable to INT");
+                                        Environment.Exit(0);
+                                    }
+
                                     break;
 
                             }
@@ -196,13 +255,16 @@ namespace clh
                         Console.WriteLine("What song do you want to add to the waitinglist?");
                         Console.Write("> ");
                         string inpu = Console.ReadLine();
-                        if (int.TryParse(inpu,out _)) {
+                        if (int.TryParse(inpu, out _))
+                        {
                             int selector = int.Parse(inpu);
 
                         }
                         else
                         {
-
+                            Console.Clear();
+                            Console.WriteLine("FATAL ERROR: String unconvertable to INT");
+                            Environment.Exit(0);
                         }
                         break;
                     case ConsoleKey.D6:

@@ -149,7 +149,7 @@ namespace backgroundworker
                 List<Song> songs = new List<Song>();
                 using (var reader = command.ExecuteReader())
                     while (reader.Read())
-                        songs.Add(new Song(reader.GetString(0),reader.GetString(1),reader.GetInt32(2),Album[reader.GetInt32(3)]));
+                        songs.Add(new Song(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), Album[reader.GetInt32(3)]));
                 return songs;
             }
         }

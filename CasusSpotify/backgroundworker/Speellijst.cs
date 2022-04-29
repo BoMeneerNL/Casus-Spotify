@@ -9,10 +9,7 @@ namespace backgroundworker
         {
 
         }
-        public Song[] GetAllSongs()
-        {
-            return Songs.ToArray();
-        }
+        public Song[] GetAllSongs() => Songs.ToArray();
         public string[] GetAllSongNames()
         {
             string[] songnames = new string[Songs.Count];

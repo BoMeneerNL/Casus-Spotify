@@ -1,5 +1,4 @@
 ﻿namespace backgroundworker
-
 {
     public class Song
     {
@@ -14,10 +13,7 @@
             Duration = duration;
             Album = album;
         }
-        public override string ToString()
-        {
-            return $"{Name} - {Artiest} - {calculate_duration(Duration) } [Album: {Album}]";
-        }
+        public override string ToString() => $"{Name} - {Artiest} - {calculate_duration(Duration) } - {Album}";
         public string calculate_duration(int duration)
         {
             int minutes = duration / 60;
