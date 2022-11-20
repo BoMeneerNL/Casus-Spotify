@@ -5,7 +5,6 @@ namespace backgroundworker
     internal class Album : ISongCollection
     {
         List<Song> Songs { get; set; } = new List<Song>();
-        int AlbumID { get; set; }
         public int Nummers { get; set; }
         public Song[] GetAllSongs() => Songs.ToArray();
         public string[] GetAllSongNames()

@@ -9,7 +9,7 @@ namespace clh
     {
         public static List<Afspeellijst> playlists = DataController.GetAllAfspeellijsten(1);
 
-        public static int calculate_duration(string time)
+        public static int calculateDuration(string time)
         {
 
             string[] secondpush = time.Trim().Split(":");
@@ -349,7 +349,7 @@ namespace clh
                         Console.Write("Please enter your password: ");
                         string password = Console.ReadLine();
 
-                        DataController.credentials_check(username, password);
+                        DataController.credentialsCheck(username, password);
                     }
 
                 }
